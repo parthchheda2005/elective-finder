@@ -33,10 +33,35 @@ export default function BarGraph({ data }: BarGraphProps) {
           .map((key) => data[key]), // Use the dictionary values for data
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1, // Bar border width
+        borderWidth: 0.8, // Bar border width
       },
     ],
   };
 
-  return <Bar options={{ responsive: true }} data={chartData} />;
+  return (
+    <div className="min-h-[300px]">
+      <Bar
+        options={{
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: "Grade Distribution",
+              padding: {
+                top: 10,
+                bottom: 5,
+              },
+              color: "white",
+            },
+          },
+          scales: {
+            x: { ticks: { color: "white" } },
+            y: { ticks: { color: "white" } },
+          },
+        }}
+        data={chartData}
+      />
+    </div>
+  );
 }

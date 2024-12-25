@@ -75,7 +75,7 @@ export default function Card({ el }: CardProps) {
             <p className="text-red-500">{error}</p>
           ) : courseData ? (
             <>
-              <div className="flex flex-row justify-between w-full space-x-4">
+              <div className="flex sm:flex-row sm:justify-between justify-evenly w-full space-x-4 flex-wrap">
                 <h2>
                   Average: {Math.round(courseData.average * 10) / 10 || "-"}
                 </h2>
