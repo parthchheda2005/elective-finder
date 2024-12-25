@@ -40,7 +40,11 @@ export default function HomePage() {
         });
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const data = await res.json();
-        setSubjects(data);
+        setSubjects(
+          data.filter(
+            (el: Subject) => el.subject != "AANB" && el.subject != "AQUA"
+          )
+        );
         console.log(data);
       } catch (e) {
         console.error("Failed to fetch subjects:", e);
@@ -80,11 +84,16 @@ export default function HomePage() {
     return () => controller.abort();
   }, [subject]);
 
+  useEffect(() => {
+    if (subjects.length > 0 && subject === "") {
+      setSubject("CPSC");
+    }
+  }, [subjects]);
+
   return (
     <div className="flex justify-center items-center flex-col">
-      {/* Subject Dropdown */}
       {subjects.length > 0 && (
-        <Box sx={{ minWidth: 120 }}>
+        <Box sx={{ width: "100%", maxWidth: 400, px: 2 }}>
           <FormControl fullWidth>
             <InputLabel sx={{ color: "white" }}>Subject</InputLabel>
             <Select
@@ -113,6 +122,7 @@ export default function HomePage() {
       {isLoading ? (
         <p>Loading courses...</p>
       ) : (
+        courses &&
         courses.map((el) => (
           <Card
             el={{ ...el, subject: subject }}
