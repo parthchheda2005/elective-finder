@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Course } from "./homePage";
+import BarGraph from "./BarGraph";
 
 interface CardProps {
   el: Course;
@@ -12,6 +13,7 @@ interface CourseData {
   median: number;
   percentile_25: number;
   percentile_75: number;
+  grades: { [key: string]: number };
 }
 
 export default function Card({ el }: CardProps) {
@@ -66,27 +68,41 @@ export default function Card({ el }: CardProps) {
         <h1 className="text-right font-bold">{el.course_title}</h1>
       </div>
       {clicked && (
-        <div className="flex flex-row justify-evenly w-full mx-3 my-2">
+        <div className="w-full mx-3 my-2">
           {isLoading ? (
             <p>Loading...</p>
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : courseData ? (
             <>
-              <h2>
-                Average: {Math.round(courseData.average * 10) / 10 || "-"}
-              </h2>
-              <h2>High: {Math.round(courseData.high * 10) / 10 || "-"}</h2>
-              <h2>Low: {Math.round(courseData.low * 10) / 10 || "-"}</h2>
-              <h2>Median: {Math.round(courseData.median * 10) / 10 || "-"}</h2>
-              <h2>
-                Lower Quartile:{" "}
-                {Math.round(courseData.percentile_25 * 10) / 10 || "-"}
-              </h2>
-              <h2>
-                Upper Quartile:{" "}
-                {Math.round(courseData.percentile_75 * 10) / 10 || "-"}
-              </h2>
+              <div className="flex flex-row justify-between w-full space-x-4">
+                <h2>
+                  Average: {Math.round(courseData.average * 10) / 10 || "-"}
+                </h2>
+                <h2>High: {Math.round(courseData.high * 10) / 10 || "-"}</h2>
+                <h2>
+                  Low:{" "}
+                  {courseData.low === 0
+                    ? 0
+                    : Math.round(courseData.low * 10) / 10 || "-"}
+                </h2>
+                <h2>
+                  Median: {Math.round(courseData.median * 10) / 10 || "-"}
+                </h2>
+                <h2>
+                  Lower Quartile:{" "}
+                  {courseData.low === 0
+                    ? 0
+                    : Math.round(courseData.percentile_25 * 10) / 10 || "-"}
+                </h2>
+                <h2>
+                  Upper Quartile:{" "}
+                  {Math.round(courseData.percentile_75 * 10) / 10 || "-"}
+                </h2>
+              </div>
+              <div className="mt-4">
+                <BarGraph data={courseData.grades} />
+              </div>
             </>
           ) : (
             <p>No data available</p>
