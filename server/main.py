@@ -15,9 +15,9 @@ app.add_middleware(
 
 
 
-@app.get("/")
-def default_page():
-    response = requests.get("https://ubcgrades.com/api/v3/courses/UBCV/2023W/CPSC")
+@app.get("/{subject}")
+def default_page(subject: str):
+    response = requests.get(f"https://ubcgrades.com/api/v3/courses/UBCV/2023W/{subject}")
     return {"Data" : response.json()}
 
 @app.get("/{subject}/{course}")
@@ -30,3 +30,4 @@ def get_course(subject: str, course: str):
             my_item = item
             break
     return my_item
+

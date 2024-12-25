@@ -34,7 +34,9 @@ export default function Card({ el }: CardProps) {
       setError(null); // Clear previous errors
       try {
         const res = await fetch(
-          `http://0.0.0.0:8000/CPSC/${el.course}${el.detail && el.detail}`,
+          `http://0.0.0.0:8000/${el.subject}/${el.course}${
+            el.detail && el.detail
+          }`,
           {
             signal: signal,
           }
@@ -56,6 +58,11 @@ export default function Card({ el }: CardProps) {
     };
   }, [clicked, courseData, el.course, el.detail]);
 
+  const formatValue = (value: number | null | undefined) => {
+    if (value === null || value === undefined) return null;
+    return value === 0 ? 0 : Math.round(value * 10) / 10;
+  };
+
   return (
     <div
       onClick={() => setClicked(!clicked)}
@@ -63,7 +70,7 @@ export default function Card({ el }: CardProps) {
     >
       <div className="flex flex-row justify-between w-full">
         <h1 className="text-left font-bold">
-          CPSC{`${el.course}${el.detail && el.detail}`}
+          {`${el.subject}${el.course}${el.detail && el.detail}`}
         </h1>
         <h1 className="text-right font-bold">{el.course_title}</h1>
       </div>
@@ -76,28 +83,15 @@ export default function Card({ el }: CardProps) {
           ) : courseData ? (
             <>
               <div className="flex sm:flex-row sm:justify-between justify-evenly w-full space-x-4 flex-wrap">
+                <h2>Average: {formatValue(courseData.average) ?? "-"}</h2>
+                <h2>High: {formatValue(courseData.high) ?? "-"}</h2>
+                <h2>Low: {formatValue(courseData.low) ?? "-"}</h2>
+                <h2>Median: {formatValue(courseData.median) ?? "-"}</h2>
                 <h2>
-                  Average: {Math.round(courseData.average * 10) / 10 || "-"}
-                </h2>
-                <h2>High: {Math.round(courseData.high * 10) / 10 || "-"}</h2>
-                <h2>
-                  Low:{" "}
-                  {courseData.low === 0
-                    ? 0
-                    : Math.round(courseData.low * 10) / 10 || "-"}
+                  Lower Quartile: {formatValue(courseData.percentile_25) ?? "-"}
                 </h2>
                 <h2>
-                  Median: {Math.round(courseData.median * 10) / 10 || "-"}
-                </h2>
-                <h2>
-                  Lower Quartile:{" "}
-                  {courseData.low === 0
-                    ? 0
-                    : Math.round(courseData.percentile_25 * 10) / 10 || "-"}
-                </h2>
-                <h2>
-                  Upper Quartile:{" "}
-                  {Math.round(courseData.percentile_75 * 10) / 10 || "-"}
+                  Upper Quartile: {formatValue(courseData.percentile_75) ?? "-"}
                 </h2>
               </div>
               <div className="mt-4">
