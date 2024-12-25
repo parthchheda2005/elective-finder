@@ -25,7 +25,7 @@ export default function HomePage() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [subject, setSubject] = useState("");
 
-  const handleChange = (e: SelectChangeEvent) => {
+  const handleChangeSubjectViewing = (e: SelectChangeEvent) => {
     setSubject(e.target.value as string);
   };
 
@@ -99,7 +99,7 @@ export default function HomePage() {
             <Select
               value={subject}
               label="Subject"
-              onChange={handleChange}
+              onChange={handleChangeSubjectViewing}
               sx={{
                 color: "white",
                 "& .MuiOutlinedInput-notchedOutline": {
