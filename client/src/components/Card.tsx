@@ -55,7 +55,7 @@ export default function Card({ el }: CardProps) {
       setError(null); // Clear previous errors
       try {
         const res = await fetch(
-          `http://0.0.0.0:8000/${el.subject}/${el.course}${
+          `http://0.0.0.0:8000/courses/${el.subject}/${el.course}${
             el.detail && el.detail
           }`,
           {

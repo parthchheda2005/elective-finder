@@ -4,6 +4,7 @@ import requests
 import os
 import certifi
 from dotenv import load_dotenv
+from auth.model import RateSchema
 
 load_dotenv()
 app = FastAPI()
@@ -17,26 +18,37 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
-uri = f"mongodb+srv://{os.environ.get('DB_USERNAME')}:{os.environ.get('DB_PASSWORD')}@cluster0.fc4ef.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-# Create a new client and connect to the server
-client = MongoClient(uri, server_api=ServerApi('1'), tlsCAFile=certifi.where()
-)
-# Send a ping to confirm a successful connection
-try:
-    client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
-except Exception as e:
-    print(e)
+# from pymongo.mongo_client import MongoClient
+# from pymongo.server_api import ServerApi
+# uri = f"mongodb+srv://{os.environ.get('DB_USERNAME')}:{os.environ.get('DB_PASSWORD')}@cluster0.fc4ef.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+# # Create a new client and connect to the server
+# client = MongoClient(uri, server_api=ServerApi('1'), tlsCAFile=certifi.where()
+# )
+# # Send a ping to confirm a successful connection
+# try:
+#     client.admin.command('ping')
+#     print("Pinged your deployment. You successfully connected to MongoDB!")
+# except Exception as e:
+#     print(e)
 
 
-@app.get("/{subject}")
-def default_page(subject: str):
+ratings = [
+    {"id": 1, "course": "210", "subject": "CPSC", "grade": 97, "rating": 5},
+    {"id": 2, "course": "111", "subject": "CHEM", "grade": 80, "rating": 1},
+    {"id": 3, "course": "113", "subject": "SCIE", "grade": 88, "rating": 3},
+    {"id": 4, "course": "100", "subject": "LING", "grade": 94, "rating": 2}
+]
+
+users = []
+
+# Get all courses by subject
+@app.get("/courses/{subject}")
+def get_courses_by_subject(subject: str):
     response = requests.get(f"https://ubcgrades.com/api/v3/courses/UBCV/2023W/{subject}")
     return {"Data" : response.json()}
 
-@app.get("/{subject}/{course}")
+# Get data on specific course from subject (ex. average, median, grade distribution)
+@app.get("/courses/{subject}/{course}")
 def get_course(subject: str, course: str):
     response = requests.get(f"https://ubcgrades.com/api/v3/grades/UBCV/2023W/{subject}/{course}")
     data = response.json()
@@ -47,3 +59,19 @@ def get_course(subject: str, course: str):
             break
     return my_item
 
+# Get all ratings
+@app.get("/ratings")
+def get_ratings():
+    return {"data" : ratings}
+
+# Get single rating by id
+@app.get("/ratings/{id}")
+def get_rating_by_id(id: int):
+    if (id > len(ratings)):
+        return {"Error": "id does not exist"}
+    my_rating = {}
+    for rating in ratings:
+        if rating["id"] == id:
+            my_rating = rating
+            break
+    return my_rating

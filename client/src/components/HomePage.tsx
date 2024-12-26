@@ -64,8 +64,8 @@ export default function HomePage() {
       try {
         const res = await fetch(
           subject === ""
-            ? "http://0.0.0.0:8000/CPSC"
-            : `http://0.0.0.0:8000/${subject}`,
+            ? "http://0.0.0.0:8000/courses/CPSC"
+            : `http://0.0.0.0:8000/courses/${subject}`,
           { signal: controller.signal }
         );
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
