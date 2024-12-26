@@ -4,17 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-uvicorn = "*"
 requests = "*"
-fastapi = "*"
-bcrypt = "*"
-cryptography = "*"
-python-jose = "*"
-python-multipart = "*"
-passlib = "*"
 pymongo = {extras = ["srv"], version = "==3.12"}
 certifi = "*"
 python-dotenv = "*"
+fastapi = "*"
+uvicorn = "*"
 pydantic = "*"
 
 [dev-packages]

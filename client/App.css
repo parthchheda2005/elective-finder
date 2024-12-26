@@ -12,5 +12,5 @@
 .block {
   animation: appear linear;
   animation-timeline: view();
-  animation-range: entry 0% cover 8%;
+  animation-range: entry 0% cover 10%;
 }

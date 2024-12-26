@@ -4,7 +4,8 @@ import requests
 import os
 import certifi
 from dotenv import load_dotenv
-from auth.model import RateSchema
+from pydantic import BaseModel, Field
+
 
 load_dotenv()
 app = FastAPI()
@@ -18,18 +19,18 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-# from pymongo.mongo_client import MongoClient
-# from pymongo.server_api import ServerApi
-# uri = f"mongodb+srv://{os.environ.get('DB_USERNAME')}:{os.environ.get('DB_PASSWORD')}@cluster0.fc4ef.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-# # Create a new client and connect to the server
-# client = MongoClient(uri, server_api=ServerApi('1'), tlsCAFile=certifi.where()
-# )
-# # Send a ping to confirm a successful connection
-# try:
-#     client.admin.command('ping')
-#     print("Pinged your deployment. You successfully connected to MongoDB!")
-# except Exception as e:
-#     print(e)
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+uri = f"mongodb+srv://{os.environ.get('DB_USERNAME')}:{os.environ.get('DB_PASSWORD')}@cluster0.fc4ef.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+# Create a new client and connect to the server
+client = MongoClient(uri, server_api=ServerApi('1'), tlsCAFile=certifi.where()
+)
+# Send a ping to confirm a successful connection
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
 
 
 ratings = [
@@ -39,7 +40,6 @@ ratings = [
     {"id": 4, "course": "100", "subject": "LING", "grade": 94, "rating": 2}
 ]
 
-users = []
 
 # Get all courses by subject
 @app.get("/courses/{subject}")
@@ -77,6 +77,12 @@ def get_rating_by_id(id: int):
     return my_rating
 
 # Post Rating
+class RateSchema(BaseModel):
+    id: int = Field(default = None)
+    course: str
+    subject: str
+    grade: int
+    rating: int
 @app.post("/create-rating")
 def create_rating(rating: RateSchema):
     rating.id = len(ratings) + 1
