@@ -75,3 +75,13 @@ def get_rating_by_id(id: int):
             my_rating = rating
             break
     return my_rating
+
+# Post Rating
+@app.post("/create-rating")
+def create_rating(rating: RateSchema):
+    rating.id = len(ratings) + 1
+    ratings.append(ratings)
+    return {"Info" : "Rating added"}
+
+    
+
