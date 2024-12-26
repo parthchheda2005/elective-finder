@@ -31,7 +31,7 @@ export default function BarGraph({ data }: BarGraphProps) {
         data: Object.keys(data)
           .sort((a, b) => (a === "<50%" ? -1 : 1))
           .map((key) => data[key]), // Use the dictionary values for data
-        backgroundColor: "rgba(80, 153, 216, 0.2)",
+        backgroundColor: "rgba(45, 136, 215, 0.2)",
         borderColor: "#726d6d",
         borderWidth: 0.8, // Bar border width
       },

@@ -24,7 +24,7 @@ export default function Card({ el }: CardProps) {
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [gradeValue, setGradeValue] = useState<number>(85);
+  const [gradeValue, setGradeValue] = useState<number>(70);
   const [ratingValue, setRatingValue] = useState<number>(3);
 
   const gradeMarks = [
@@ -92,8 +92,8 @@ export default function Card({ el }: CardProps) {
   return (
     <div
       onClick={() => setClicked(true)}
-      className={`w-full max-w-[720px] text-neutral-100 bg-neutral-700 mx-10 my-3 shadow-lg rounded-lg px-3 py-3 flex items-center justify-between ${
-        !clicked && `lg:hover:scale-110 transition duration-300`
+      className={`w-full max-w-[720px] text-neutral-100 bg-neutral-700 mx-10 my-3 shadow-lg rounded-lg px-3 py-3 flex items-center justify-between mt-4 block ${
+        !clicked && `lg:hover:scale-110 transition duration-150`
       } flex-col`}
     >
       <div className="flex flex-row justify-between w-full">

@@ -55,7 +55,6 @@ export default function HomePage() {
     return () => controller.abort();
   }, []);
 
-  // Fetch Courses (Triggered by subject change)
   useEffect(() => {
     const controller = new AbortController();
 
