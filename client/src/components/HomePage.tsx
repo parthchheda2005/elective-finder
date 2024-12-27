@@ -20,10 +20,10 @@ export interface Subject {
 }
 
 export default function HomePage() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [courses, setCourses] = useState<Course[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [subject, setSubject] = useState("");
+  const [subject, setSubject] = useState<String>("");
 
   const handleChangeSubjectViewing = (e: SelectChangeEvent) => {
     setSubject(e.target.value as string);

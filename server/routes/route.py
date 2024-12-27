@@ -25,6 +25,8 @@ async def update_rating(subject: str, course: str, rating: Rating):
     collection_name.update_one(filters, {"$set": dict(rating)})
     return {"Info": f"Successfuly updated {subject}{course}!"}
 
+
+# Delete rating
 @router.delete("/remove-rating/{subject}/{course}")
 async def delete_rating(subject: str, course: str):
     filters = {"subject": subject, "course": course}

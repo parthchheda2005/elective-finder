@@ -20,12 +20,13 @@ interface CourseData {
 }
 
 export default function Card({ el }: CardProps) {
-  const [clicked, setClicked] = useState(false);
+  const [clicked, setClicked] = useState<boolean>(false);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<String | null>(null);
   const [gradeValue, setGradeValue] = useState<number>(70);
   const [ratingValue, setRatingValue] = useState<number>(3);
+  const [hasRating, setHasRating] = useState<boolean>(false);
 
   const gradeMarks = [
     { value: 0, label: "0" },
@@ -42,6 +43,11 @@ export default function Card({ el }: CardProps) {
     { value: 4, label: "4" },
     { value: 5, label: "5" },
   ];
+
+  const formatValue = (value: number | null | undefined) => {
+    if (value === null || value === undefined) return null;
+    return value === 0 ? 0 : Math.round(value * 10) / 10;
+  };
 
   useEffect(() => {
     if (!clicked || courseData) return;
@@ -78,11 +84,6 @@ export default function Card({ el }: CardProps) {
       controller.abort();
     };
   }, [clicked, courseData, el.course, el.detail]);
-
-  const formatValue = (value: number | null | undefined) => {
-    if (value === null || value === undefined) return null;
-    return value === 0 ? 0 : Math.round(value * 10) / 10;
-  };
 
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent event from bubbling up to parent div
