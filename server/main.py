@@ -5,6 +5,7 @@ import os
 import certifi
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
+from typing import Optional
 
 
 load_dotenv()
@@ -83,11 +84,43 @@ class RateSchema(BaseModel):
     subject: str
     grade: int
     rating: int
+
 @app.post("/create-rating")
 def create_rating(rating: RateSchema):
-    rating.id = len(ratings) + 1
-    ratings.append(ratings)
-    return {"Info" : "Rating added"}
+    new_rating = rating.dict()
+    new_rating["id"] = len(ratings) + 1
+    ratings.append(new_rating)
+    return {"Info": "Rating added", "Rating": new_rating}
 
+class UpdateRating(BaseModel):
+    id: Optional[int] = None
+    course: Optional[str] = None
+    subject: Optional[str] = None
+    grade: Optional[int] = None
+    rating: Optional[int] = None
+
+# Update Rating
+@app.put("/update-rating/{subject}/{course}")
+def update_rating(subject: str, course: str, rating: UpdateRating):
+    seen = False
+    for courseTaken in ratings:
+        if courseTaken["subject"] == subject and courseTaken["course"] == course:
+            seen = True
+            if rating.grade is not None:
+                courseTaken["grade"] = rating.grade
+            if rating.rating is not None:
+                courseTaken["rating"] = rating.rating
+            return {"Info": f"{subject}{course} successfully updated!", "UpdatedRating": courseTaken}
     
-
+    if not seen:
+        return {"Error": "You haven't rated this yet"}
+    
+# Delete Rating 
+@app.delete("/delete-rating/{subject}/{course}")
+def delete_rating(subject: str, course: str):
+    courseToDelete = {}
+    for courseTaken in ratings:
+        if courseTaken["subject"] == subject and courseTaken["course"] == course:
+            courseToDelete = courseTaken
+    ratings.remove(courseToDelete)
+    return {"Info": "Successfully deleted items!"}
