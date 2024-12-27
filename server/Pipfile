@@ -5,12 +5,12 @@ name = "pypi"
 
 [packages]
 requests = "*"
-pymongo = {extras = ["srv"], version = "==3.12"}
 certifi = "*"
 python-dotenv = "*"
 fastapi = "*"
 uvicorn = "*"
 pydantic = "*"
+pymongo = {extras = ["srv"], version = "*"}
 
 [dev-packages]
 
