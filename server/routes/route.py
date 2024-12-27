@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from models.ratings import Rating
 from config.database import collection_name
-from schema.schemas import list_serial
+from schema.schemas import list_serial, individual_serial
 from bson import ObjectId
 
 router = APIRouter()
@@ -11,6 +11,19 @@ router = APIRouter()
 async def get_ratings():
     ratings = list_serial(collection_name.find())
     return ratings
+
+# Get rating by course
+@router.get("/ratings/{subject}/{course}")
+async def get_rating_by_course(subject: str, course: str):
+    rating = collection_name.find_one({"subject": subject, "course": course})
+    if rating:
+        serialized_rating = individual_serial(rating)
+        serialized_rating['found'] = True
+        return serialized_rating
+    else:
+        return {"found": False, "message": "No rating found for the specified subject and course."}
+
+
 
 # Add ratings to DB (post method)
 @router.post("/create-rating")

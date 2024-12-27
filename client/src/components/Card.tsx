@@ -19,11 +19,17 @@ interface CourseData {
   grades: { [key: string]: number };
 }
 
+interface RatingData {
+  found: boolean;
+  grade?: number;
+  rating?: number;
+}
+
 export default function Card({ el }: CardProps) {
   const [clicked, setClicked] = useState<boolean>(false);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<String | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [gradeValue, setGradeValue] = useState<number>(70);
   const [ratingValue, setRatingValue] = useState<number>(3);
   const [hasRating, setHasRating] = useState<boolean>(false);
@@ -49,28 +55,53 @@ export default function Card({ el }: CardProps) {
     return value === 0 ? 0 : Math.round(value * 10) / 10;
   };
 
+  const handleClose = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setClicked(false);
+  };
+
   useEffect(() => {
-    if (!clicked || courseData) return;
+    if (!clicked) return;
 
     const controller = new AbortController();
     const signal = controller.signal;
 
-    const getCourseData = async () => {
+    const fetchData = async () => {
       setIsLoading(true);
-      setCourseData(null);
-      setError(null); // Clear previous errors
+      setError(null);
+
       try {
-        const res = await fetch(
-          `http://0.0.0.0:8000/courses/${el.subject}/${el.course}${
-            el.detail && el.detail
-          }`,
-          {
-            signal: signal,
-          }
-        );
-        if (!res.ok) throw new Error("Failed to fetch data");
-        const data = await res.json();
-        setCourseData(data);
+        const [courseResponse, ratingResponse] = await Promise.all([
+          fetch(
+            `http://0.0.0.0:8000/courses/${el.subject}/${el.course}${
+              el.detail && el.detail
+            }`,
+            { signal }
+          ),
+          fetch(
+            `http://0.0.0.0:8000/ratings/${el.subject}/${el.course}${
+              el.detail && el.detail
+            }`,
+            { signal }
+          ),
+        ]);
+
+        if (!courseResponse.ok) throw new Error("Failed to fetch course data");
+        if (!ratingResponse.ok) throw new Error("Failed to fetch rating data");
+
+        const [courseDataResult, ratingDataResult] = await Promise.all([
+          courseResponse.json(),
+          ratingResponse.json(),
+        ]);
+
+        setCourseData(courseDataResult);
+
+        // Update rating states if rating exists
+        if (ratingDataResult.found) {
+          setHasRating(true);
+          setGradeValue(ratingDataResult.grade);
+          setRatingValue(ratingDataResult.rating);
+        }
       } catch (e: any) {
         setError(e.message || "An error occurred");
       } finally {
@@ -78,16 +109,54 @@ export default function Card({ el }: CardProps) {
       }
     };
 
-    getCourseData();
+    fetchData();
 
     return () => {
       controller.abort();
     };
-  }, [clicked, courseData, el.course, el.detail]);
+  }, [clicked, el.subject, el.course, el.detail]);
 
-  const handleClose = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent event from bubbling up to parent div
-    setClicked(false);
+  const addRating = async () => {
+    try {
+      const response = await fetch("http://0.0.0.0:8000/create-rating", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          course: `${el.course}${el.detail}`,
+          subject: el.subject,
+          grade: gradeValue,
+          rating: ratingValue,
+        }),
+      });
+
+      const data = await response.json();
+      console.log("Rating added successfully:", data);
+      setHasRating(true);
+    } catch (e) {
+      console.error("Something went wrong adding course");
+    }
+  };
+
+  const removeRating = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      const response = await fetch(
+        `http://0.0.0.0:8000/remove-rating/${el.subject}/${el.course}${
+          el.detail && el.detail
+        }`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      const data = await response.json();
+      console.log("Course rating successfully deleted:", data);
+      setHasRating(false);
+    } catch (e) {
+      console.error("Something went wrong with removing rating");
+    }
   };
 
   return (
@@ -174,13 +243,36 @@ export default function Card({ el }: CardProps) {
                 </Box>
               </div>
             </>
-          ) : (
-            <p>No data available</p>
-          )}
-          <div className="mt-4 flex justify-center items-center">
-            <Button variant="contained" onClick={handleClose}>
-              Close Tab
-            </Button>
+          ) : null}
+          <div className="mt-4 flex justify-center items-center flex-col">
+            {hasRating ? (
+              <Button
+                variant="contained"
+                color="warning"
+                onClick={removeRating}
+                style={{ minWidth: "130px", maxWidth: "130px" }}
+              >
+                Remove Rating
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="success"
+                onClick={addRating}
+                style={{ minWidth: "130px", maxWidth: "130px" }}
+              >
+                Add Rating
+              </Button>
+            )}
+            <div className="mt-3">
+              <Button
+                variant="contained"
+                onClick={handleClose}
+                style={{ minWidth: "130px", maxWidth: "130px" }}
+              >
+                Close Tab
+              </Button>
+            </div>
           </div>
         </div>
       )}

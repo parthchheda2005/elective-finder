@@ -23,7 +23,7 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [courses, setCourses] = useState<Course[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [subject, setSubject] = useState<String>("");
+  const [subject, setSubject] = useState<string>("");
 
   const handleChangeSubjectViewing = (e: SelectChangeEvent) => {
     setSubject(e.target.value as string);
