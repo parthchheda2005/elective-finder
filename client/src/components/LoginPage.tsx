@@ -119,6 +119,15 @@ export default function LoginPage() {
             {loading ? "Logging in..." : "Login"}
           </Button>
         </form>
+        <Button
+          type="submit"
+          variant="contained"
+          style={{ minWidth: "150px", maxWidth: "150px", marginTop: "10px" }}
+          disabled={loading}
+          onClick={() => navigate("/register")}
+        >
+          Register
+        </Button>
       </div>
     </div>
   );
