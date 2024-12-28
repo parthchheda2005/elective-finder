@@ -1,5 +1,5 @@
-import { ReactEventHandler, useState } from "react";
-import { Box, Button, TextField, Typography, Alert } from "@mui/material";
+import { useState } from "react";
+import { Button, TextField, Typography, Alert } from "@mui/material";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -39,7 +39,7 @@ export default function LoginPage() {
     try {
       // send request to backend for the token
       const response = await fetch(
-        `http://localhost:8000/login?username=${username}&password=${password}`,
+        `http://127.0.0.1:8000/login?username=${username}&password=${password}`,
         {
           method: "POST",
           headers: {
@@ -71,7 +71,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center items-center text-slate-200 mt-44 flex-col">
+    <div className="flex justify-center items-center text-slate-200 flex-col h-screen">
       <h1 className="font-bold text-6xl mb-8">Login</h1>
 
       <form

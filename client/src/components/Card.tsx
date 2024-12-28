@@ -76,13 +76,13 @@ export default function Card({ el }: CardProps) {
       try {
         const [courseResponse, ratingResponse] = await Promise.all([
           fetch(
-            `http://0.0.0.0:8000/courses/${el.subject}/${el.course}${
+            `http://127.0.0.1:8000/courses/${el.subject}/${el.course}${
               el.detail && el.detail
             }`,
             { signal }
           ),
           fetch(
-            `http://0.0.0.0:8000/ratings/${el.subject}/${el.course}${
+            `http://127.0.0.1:8000/ratings/${el.subject}/${el.course}${
               el.detail || ""
             }`,
             {
@@ -127,7 +127,7 @@ export default function Card({ el }: CardProps) {
 
   const addRating = async () => {
     try {
-      const response = await fetch("http://0.0.0.0:8000/create-rating", {
+      const response = await fetch("http://127.0.0.1:8000/create-rating", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -153,7 +153,7 @@ export default function Card({ el }: CardProps) {
     e.stopPropagation();
     try {
       const response = await fetch(
-        `http://0.0.0.0:8000/remove-rating/${el.subject}/${el.course}${
+        `http://127.0.0.1:8000/remove-rating/${el.subject}/${el.course}${
           el.detail && el.detail
         }`,
         {
