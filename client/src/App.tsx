@@ -1,5 +1,5 @@
 import "./../App.css";
-import HomePage from "./components/homePage";
+import CoursesPage from "./components/CoursesPage";
 import LoginPage from "./components/LoginPage";
 import RegisterPage from "./components/RegisterPage";
 
@@ -8,7 +8,7 @@ function App() {
     <div className="p-5">
       <RegisterPage />
       {/* <LoginPage></LoginPage> */}
-      {/* <HomePage></HomePage> */}
+      {/* <CoursesPage></CoursesPage> */}
     </div>
   );
 }

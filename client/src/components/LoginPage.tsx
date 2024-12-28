@@ -71,43 +71,51 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center items-center text-slate-200 flex-col h-screen">
-      <h1 className="font-bold text-6xl mb-8">Login</h1>
+    <div className="flex justify-center items-center text-slate-200 flex-col sm:flex-row h-screen">
+      <div>
+        <h1 className="font-bold text-6xl mb-8 sm:mb-4 sm:mr-20">login.</h1>
+        <p className="hidden sm:block">
+          {" "}
+          you know the drill <br /> username, password, all that
+        </p>
+      </div>
 
-      <form
-        onSubmit={handleLogin}
-        className="flex flex-col gap-4 w-80 items-center"
-      >
-        <TextField // login text field
-          label="Username"
-          variant="outlined"
-          sx={muiTextFieldSx}
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <TextField
-          label="Password"
-          type="password"
-          variant="outlined"
-          sx={muiTextFieldSx}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-
-        {error && <Alert severity="error">{error}</Alert>}
-        {success && <Alert severity="success">{success}</Alert>}
-
-        <Button
-          type="submit"
-          variant="contained"
-          style={{ minWidth: "150px", maxWidth: "150px", marginTop: "10px" }}
-          disabled={loading}
+      <div className="sm:flex sm:justify-center sm:items-center sm:flex-col">
+        <form
+          onSubmit={handleLogin}
+          className="flex flex-col gap-4 w-80 items-center"
         >
-          {loading ? "Logging in..." : "Login"}
-        </Button>
-      </form>
+          <TextField // login text field
+            label="Username"
+            variant="outlined"
+            sx={muiTextFieldSx}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+          <TextField
+            label="Password"
+            type="password"
+            variant="outlined"
+            sx={muiTextFieldSx}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          {error && <Alert severity="error">{error}</Alert>}
+          {success && <Alert severity="success">{success}</Alert>}
+
+          <Button
+            type="submit"
+            variant="contained"
+            style={{ minWidth: "150px", maxWidth: "150px", marginTop: "10px" }}
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }

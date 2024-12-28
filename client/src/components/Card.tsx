@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Course } from "./homePage";
+import { Course } from "./CoursesPage";
 import BarGraph from "./BarGraph";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
@@ -24,9 +24,6 @@ interface RatingData {
   grade?: number;
   rating?: number;
 }
-
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzZmNmFkZDAzNWFiY2I4YjEzZTZhNjkiLCJleHAiOjE3Mzc5NTMwNzJ9.mHCtY3Y6nhP2O3abV-QsbGXdYDoUak-IbAjvyin2mNA";
 
 export default function Card({ el }: CardProps) {
   const [clicked, setClicked] = useState<boolean>(false);
