@@ -148,6 +148,35 @@ export default function Card({ el }: CardProps) {
     }
   };
 
+  const updateRating = async () => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/update-rating/${el.subject}/${el.course}${
+          el.detail || ""
+        }`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            course: `${el.course}${el.detail}`,
+            subject: el.subject,
+            grade: gradeValue,
+            rating: ratingValue,
+          }),
+        }
+      );
+
+      const data = await response.json();
+      console.log("Rating added successfully:", data);
+      setHasRating(true);
+    } catch (e) {
+      console.error("Something went wrong adding course");
+    }
+  };
+
   const removeRating = async (e: React.MouseEvent) => {
     e.stopPropagation();
     try {
@@ -258,14 +287,26 @@ export default function Card({ el }: CardProps) {
           ) : null}
           <div className="mt-4 flex justify-center items-center flex-col">
             {hasRating ? (
-              <Button
-                variant="contained"
-                color="warning"
-                onClick={removeRating}
-                style={{ minWidth: "130px", maxWidth: "130px" }}
-              >
-                Remove Rating
-              </Button>
+              <div className="flex justify-evenly items-center flex-row">
+                <div className="mr-3">
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={updateRating}
+                    style={{ minWidth: "130px", maxWidth: "130px" }}
+                  >
+                    Update Rating
+                  </Button>
+                </div>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={removeRating}
+                  style={{ minWidth: "130px", maxWidth: "130px" }}
+                >
+                  Remove Rating
+                </Button>
+              </div>
             ) : (
               <Button
                 variant="contained"

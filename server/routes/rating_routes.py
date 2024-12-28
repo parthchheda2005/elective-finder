@@ -38,7 +38,9 @@ async def create_ratings(rating: Rating, user: dict = Depends(get_current_user))
 @router.put("/update-rating/{subject}/{course}")
 async def update_rating(subject: str, course: str, rating: Rating, user: dict = Depends(get_current_user)):
     filters = {"subject" : subject, "course": course, "user_id": str(user["_id"])} 
-    result =  ratings_collection.update_one(filters, {"$set": dict(rating)})
+    rating_data = dict(rating)
+    rating_data['user_id'] = str(user["_id"])
+    result =  ratings_collection.update_one(filters, {"$set": dict(rating_data)})
     # get rating by subject, course, and user and set it to the new rating
     if result.matched_count == 0: # if we did not find a rating, raise an exception
         raise HTTPException(status_code=404, detail="Rating not found")
