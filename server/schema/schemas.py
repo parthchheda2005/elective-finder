@@ -6,6 +6,7 @@ def individual_serial(rating) -> dict:
         "subject": rating["subject"],
         "grade": rating["grade"],
         "rating": rating["rating"],
+        "user_id": rating['user_id']
     }
 
 def list_serial(ratings) -> list:

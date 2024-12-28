@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 from dotenv import load_dotenv
-from routes.route import router
+from routes import user_routes, rating_routes
 
 load_dotenv()
 app = FastAPI()
@@ -18,7 +18,8 @@ app.add_middleware(
 
 
 # ROUTES
-app.include_router(router)
+app.include_router(user_routes.router)
+app.include_router(rating_routes.router)
 
 # Get all courses by subject
 @app.get("/courses/{subject}")

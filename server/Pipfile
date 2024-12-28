@@ -11,6 +11,9 @@ fastapi = "*"
 uvicorn = "*"
 pydantic = "*"
 pymongo = {extras = ["srv"], version = "*"}
+passlib = "*"
+bcrypt = "*"
+python-jose = "*"
 
 [dev-packages]
 
