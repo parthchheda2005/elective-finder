@@ -3,24 +3,23 @@ from models.ratings import Rating
 from config.database import ratings_collection
 from schema.schemas import list_serial, individual_serial
 from auth.auth import get_current_user
-from bson import ObjectId
-
 
 router = APIRouter()
 
 # Get All Ratings for Current User
 @router.get("/ratings")
-async def get_ratings(user: dict = Depends(get_current_user)):
-    ratings = list_serial(ratings_collection.find({"user_id" : str(user["_id"])}))
+async def get_ratings(user: dict = Depends(get_current_user)): # depends on the current user
+    ratings = list_serial(ratings_collection.find({"user_id" : str(user["_id"])})) # get all the ratings by the current user
     return ratings
 
 # Get rating by course
 @router.get("/ratings/{subject}/{course}")
-async def get_rating_by_course(subject: str, course: str, user: dict = Depends(get_current_user)):
+async def get_rating_by_course(subject: str, course: str, user: dict = Depends(get_current_user)): # depends on current user
     rating = ratings_collection.find_one({"subject": subject, "course": course, "user_id" : str(user["_id"])})
+    # get rating by subject, course, and user
     if rating:
-        serialized_rating = individual_serial(rating)
-        serialized_rating['found'] = True
+        serialized_rating = individual_serial(rating) # make the rating an actual usable python dict
+        serialized_rating['found'] = True # set found true, helps with the fronted (which i gotta clean up)
         return serialized_rating
     else:
         return {"found": False, "message": "No rating found for the specified subject and course."}
@@ -38,9 +37,10 @@ async def create_ratings(rating: Rating, user: dict = Depends(get_current_user))
 # Update Ratings from DB
 @router.put("/update-rating/{subject}/{course}")
 async def update_rating(subject: str, course: str, rating: Rating, user: dict = Depends(get_current_user)):
-    filters = {"subject" : subject, "course": course, "user_id": str(user["_id"])}
+    filters = {"subject" : subject, "course": course, "user_id": str(user["_id"])} 
     result =  ratings_collection.update_one(filters, {"$set": dict(rating)})
-    if result.matched_count == 0:
+    # get rating by subject, course, and user and set it to the new rating
+    if result.matched_count == 0: # if we did not find a rating, raise an exception
         raise HTTPException(status_code=404, detail="Rating not found")
 
     return {"Info": f"Successfuly updated {subject}{course}!"}
@@ -51,7 +51,8 @@ async def update_rating(subject: str, course: str, rating: Rating, user: dict = 
 async def delete_rating(subject: str, course: str, user: dict = Depends(get_current_user)):
     filters = {"subject": subject, "course": course, "user_id": str(user["_id"])}
     result = ratings_collection.delete_one(filters)
-    if result.deleted_count == 0:
+    # get rating by subject, course, and user and delete it
+    if result.deleted_count == 0: # if we did not find a rating, raise an exception
         raise HTTPException(status_code=404, detail="Rating not found")
 
     return {"Info": f"Successfully deleted {subject}{course} rating!"}

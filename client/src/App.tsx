@@ -5,8 +5,8 @@ import LoginPage from "./components/LoginPage";
 function App() {
   return (
     <div className="p-5">
-      <LoginPage></LoginPage>
-      {/* <HomePage></HomePage> */}
+      {/* <LoginPage></LoginPage> */}
+      <HomePage></HomePage>
     </div>
   );
 }

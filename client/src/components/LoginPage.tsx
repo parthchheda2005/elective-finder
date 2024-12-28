@@ -31,11 +31,13 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // make everything its default
     setError("");
     setSuccess("");
     setLoading(true);
 
     try {
+      // send request to backend for the token
       const response = await fetch(
         `http://localhost:8000/login?username=${username}&password=${password}`,
         {
@@ -45,7 +47,7 @@ export default function LoginPage() {
           },
         }
       );
-
+      // error handling
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
@@ -53,6 +55,7 @@ export default function LoginPage() {
         );
       }
 
+      // get token
       const data = await response.json();
       const { access_token } = data;
 
@@ -75,7 +78,7 @@ export default function LoginPage() {
         onSubmit={handleLogin}
         className="flex flex-col gap-4 w-80 items-center"
       >
-        <TextField
+        <TextField // login text field
           label="Username"
           variant="outlined"
           sx={muiTextFieldSx}

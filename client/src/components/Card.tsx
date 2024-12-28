@@ -25,6 +25,9 @@ interface RatingData {
   rating?: number;
 }
 
+const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzZmNmFkZDAzNWFiY2I4YjEzZTZhNjkiLCJleHAiOjE3Mzc5NTMwNzJ9.mHCtY3Y6nhP2O3abV-QsbGXdYDoUak-IbAjvyin2mNA";
+
 export default function Card({ el }: CardProps) {
   const [clicked, setClicked] = useState<boolean>(false);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
@@ -80,9 +83,15 @@ export default function Card({ el }: CardProps) {
           ),
           fetch(
             `http://0.0.0.0:8000/ratings/${el.subject}/${el.course}${
-              el.detail && el.detail
+              el.detail || ""
             }`,
-            { signal }
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              signal,
+            }
           ),
         ]);
 
@@ -122,6 +131,7 @@ export default function Card({ el }: CardProps) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           course: `${el.course}${el.detail}`,
@@ -148,6 +158,9 @@ export default function Card({ el }: CardProps) {
         }`,
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 

@@ -1,7 +1,5 @@
 from pydantic import BaseModel, Field
 from typing import Optional
-
-
 class Rating(BaseModel):
     course: str
     subject: str
