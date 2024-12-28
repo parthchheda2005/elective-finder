@@ -34,6 +34,8 @@ export default function Card({ el }: CardProps) {
   const [ratingValue, setRatingValue] = useState<number>(3);
   const [hasRating, setHasRating] = useState<boolean>(false);
 
+  const token = localStorage.getItem("token");
+
   const gradeMarks = [
     { value: 0, label: "0" },
     { value: 25, label: "25" },

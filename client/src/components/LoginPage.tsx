@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button, TextField, Typography, Alert } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -7,6 +8,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  const navigate = useNavigate();
 
   const muiTextFieldSx = {
     "& .MuiOutlinedInput-root": {
@@ -63,6 +66,7 @@ export default function LoginPage() {
       localStorage.setItem("token", access_token);
       setSuccess("Login successful! Redirecting...");
       console.log("Token:", access_token);
+      navigate("/course-page");
     } catch (e) {
       setError("Can't log you in. Check your credentials");
     } finally {

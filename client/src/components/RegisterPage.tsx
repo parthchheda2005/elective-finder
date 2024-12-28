@@ -8,6 +8,7 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export interface Subject {
   subject: string;
@@ -24,6 +25,8 @@ export default function RegisterPage() {
   const [subject, setSubject] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  const navigate = useNavigate();
 
   const muiTextFieldSx = {
     "& .MuiOutlinedInput-root": {
@@ -80,6 +83,7 @@ export default function RegisterPage() {
       }
 
       setSuccess("Registration successful! Redirecting...");
+      navigate("/login");
     } catch (e) {
       setError(
         "Can't register. Check your credentials, ensure everything is filled in"
