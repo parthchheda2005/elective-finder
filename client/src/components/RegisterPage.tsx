@@ -233,15 +233,17 @@ export default function RegisterPage() {
             {loading ? "Registering..." : "Register"}
           </Button>
         </form>
-        <Button
-          type="submit"
-          variant="contained"
-          style={{ minWidth: "150px", maxWidth: "150px", marginTop: "10px" }}
-          disabled={loading}
-          onClick={() => navigate("/login")}
-        >
-          Login
-        </Button>
+        <div className="flex justify-center items-center mt-1">
+          <Button
+            type="submit"
+            variant="contained"
+            style={{ minWidth: "150px", maxWidth: "150px", marginTop: "10px" }}
+            disabled={loading}
+            onClick={() => navigate("/login")}
+          >
+            Login
+          </Button>
+        </div>
       </div>
     </div>
   );
