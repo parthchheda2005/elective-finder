@@ -4,6 +4,7 @@ import BarGraph from "./BarGraph";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import Button from "@mui/material/Button";
+import { Alert } from "@mui/material";
 
 interface CardProps {
   el: Course;
@@ -19,12 +20,6 @@ interface CourseData {
   grades: { [key: string]: number };
 }
 
-interface RatingData {
-  found: boolean;
-  grade?: number;
-  rating?: number;
-}
-
 export default function Card({ el }: CardProps) {
   const [clicked, setClicked] = useState<boolean>(false);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
@@ -33,6 +28,7 @@ export default function Card({ el }: CardProps) {
   const [gradeValue, setGradeValue] = useState<number>(70);
   const [ratingValue, setRatingValue] = useState<number>(3);
   const [hasRating, setHasRating] = useState<boolean>(false);
+  const [alert, setAlert] = useState("");
 
   const token = localStorage.getItem("token");
 
@@ -60,6 +56,7 @@ export default function Card({ el }: CardProps) {
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation();
     setClicked(false);
+    setAlert("");
   };
 
   useEffect(() => {
@@ -124,6 +121,16 @@ export default function Card({ el }: CardProps) {
     };
   }, [clicked, el.subject, el.course, el.detail]);
 
+  useEffect(() => {
+    if (alert) {
+      const timer = setTimeout(() => {
+        setAlert("");
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [alert]);
+
   const addRating = async () => {
     try {
       const response = await fetch("http://127.0.0.1:8000/create-rating", {
@@ -141,7 +148,7 @@ export default function Card({ el }: CardProps) {
       });
 
       const data = await response.json();
-      console.log("Rating added successfully:", data);
+      setAlert("Rating added successfully!");
       setHasRating(true);
     } catch (e) {
       console.error("Something went wrong adding course");
@@ -170,10 +177,10 @@ export default function Card({ el }: CardProps) {
       );
 
       const data = await response.json();
-      console.log("Rating added successfully:", data);
+      setAlert("Rating updated successfully!");
       setHasRating(true);
     } catch (e) {
-      console.error("Something went wrong adding course");
+      console.error("Something went wrong updating course");
     }
   };
 
@@ -193,7 +200,7 @@ export default function Card({ el }: CardProps) {
       );
 
       const data = await response.json();
-      console.log("Course rating successfully deleted:", data);
+      setAlert("Course rating successfully deleted!");
       setHasRating(false);
     } catch (e) {
       console.error("Something went wrong with removing rating");
@@ -316,6 +323,11 @@ export default function Card({ el }: CardProps) {
               >
                 Add Rating
               </Button>
+            )}
+            {alert != "" && (
+              <div className="mt-3">
+                <Alert severity="success">{alert}</Alert>
+              </div>
             )}
             <div className="mt-3">
               <Button
