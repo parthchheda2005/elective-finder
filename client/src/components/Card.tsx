@@ -133,7 +133,7 @@ export default function Card({ el }: CardProps) {
 
   const addRating = async () => {
     try {
-      const response = await fetch(
+      await fetch(
         "https://elective-finder.onrender.com/create-rating",
         {
           method: "POST",
@@ -159,7 +159,7 @@ export default function Card({ el }: CardProps) {
 
   const updateRating = async () => {
     try {
-      const response = await fetch(
+      await fetch(
         `https://elective-finder.onrender.com/update-rating/${el.subject}/${
           el.course
         }${el.detail || ""}`,
@@ -189,7 +189,7 @@ export default function Card({ el }: CardProps) {
   const removeRating = async (e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      const response = await fetch(
+      await fetch(
         `https://elective-finder.onrender.com/remove-rating/${el.subject}/${
           el.course
         }${el.detail && el.detail}`,
