@@ -32,7 +32,7 @@ async def login_user(username: str, password: str):
     if not user or not verify_password(password, user['password']): # if username dont exist or password is wrong, raise exception
         raise HTTPException(status_code=401, detail = "Invalid Credentials")
     
-    access_token_expires = timedelta(30)
+    access_token_expires = timedelta(minutes=30)
     # give access token an exipry
     access_token = create_access_token( # function is in ./auth/auth.py
         data = {"sub": str(user['_id'])}, # create token, with data is is an object where sub (or subject) is user id 
