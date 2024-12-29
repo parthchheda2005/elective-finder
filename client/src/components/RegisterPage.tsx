@@ -181,7 +181,6 @@ export default function RegisterPage() {
           />
           <FormControl fullWidth>
             <InputLabel
-              id="subject-label"
               sx={{
                 color: "white",
                 "&.Mui-focused": {
@@ -189,13 +188,11 @@ export default function RegisterPage() {
                 },
               }}
             >
-              Subject
+              Major
             </InputLabel>
             <Select
-              labelId="subject-label"
-              id="subject-select"
               value={subject}
-              label="Subject"
+              label="Major"
               onChange={(e) => {
                 setSubject(e.target.value);
                 console.log(e.target.value);

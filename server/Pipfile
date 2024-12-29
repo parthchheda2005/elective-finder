@@ -14,6 +14,7 @@ pymongo = {extras = ["srv"], version = "*"}
 passlib = "*"
 bcrypt = "*"
 python-jose = "*"
+google-generativeai = "*"
 
 [dev-packages]
 
