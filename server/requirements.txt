@@ -1,0 +1,11 @@
+requests
+certifi
+python-dotenv
+fastapi
+uvicorn
+pydantic
+pymongo
+passlib
+bcrypt
+python-jose
+google-generativeai
