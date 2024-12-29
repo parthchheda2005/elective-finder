@@ -21,8 +21,9 @@ export default function RegisterPage() {
   const [passwordAgain, setPasswordAgain] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [subjects, setSubjects] = useState([]);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
   const [subject, setSubject] = useState("");
+  const [subjectCode, setSubjectCode] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -70,6 +71,7 @@ export default function RegisterPage() {
         },
         body: JSON.stringify({
           major: subject,
+          major_code: subjectCode,
           email,
           username,
           password,
@@ -191,11 +193,16 @@ export default function RegisterPage() {
               Major
             </InputLabel>
             <Select
-              value={subject}
+              value={subjectCode}
               label="Major"
               onChange={(e) => {
-                setSubject(e.target.value);
-                console.log(e.target.value);
+                const selectedSubject = subjects.find(
+                  (el: Subject) => e.target.value === el.subject
+                );
+                if (selectedSubject) {
+                  setSubject(selectedSubject.subject_title);
+                  setSubjectCode(selectedSubject.subject);
+                }
               }}
               sx={{
                 color: "white",
@@ -211,7 +218,7 @@ export default function RegisterPage() {
               }}
             >
               {subjects.map((el: Subject) => (
-                <MenuItem key={el.subject} value={el.subject_title}>
+                <MenuItem key={el.subject} value={el.subject}>
                   {`${el.subject} - ${el.subject_title}`}
                 </MenuItem>
               ))}

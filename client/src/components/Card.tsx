@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import Button from "@mui/material/Button";
 import { Alert } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 interface CardProps {
   el: Course;
@@ -218,7 +219,9 @@ export default function Card({ el }: CardProps) {
     >
       <div className="flex flex-row justify-between w-full">
         <h1 className="text-left font-bold">
-          {`${el.subject}${el.course}${el.detail && el.detail}`}
+          {`${el.subject}${el.course}${el.detail && el.detail} ${
+            hasRating ? "⭐️" : ""
+          }`}
         </h1>
         <h1 className="text-right font-bold">{el.course_title}</h1>
       </div>

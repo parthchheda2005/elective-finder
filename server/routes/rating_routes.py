@@ -6,12 +6,6 @@ from auth.auth import get_current_user
 
 router = APIRouter()
 
-# Get All Ratings for Current User
-@router.get("/ratings")
-async def get_ratings(user: dict = Depends(get_current_user)): # depends on the current user
-    ratings = list_serial(ratings_collection.find({"user_id" : str(user["_id"])})) # get all the ratings by the current user
-    return ratings
-
 # Get rating by course
 @router.get("/ratings/{subject}/{course}")
 async def get_rating_by_course(subject: str, course: str, user: dict = Depends(get_current_user)): # depends on current user

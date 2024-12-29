@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from models.user import User
 from auth.auth import get_password_hash, create_access_token, verify_password
+from auth.auth import get_current_user
 from config.database import users_collection
 from datetime import timedelta
 
@@ -17,6 +18,7 @@ async def regiter_user(user: User):
         "username": user.username,
         "email": user.email,
         "major": user.major,
+        "major_code": user.major_code,
         "password": hashed_password
     }
     # turn user data into a dict
@@ -38,3 +40,8 @@ async def login_user(username: str, password: str):
     )
 
     return {"access_token":access_token, "token_type": 'bearer'}
+
+@router.get('/get-user-major-code')
+async def get_user_major(user: dict = Depends(get_current_user)):
+    user_major_code = user.get("major_code")
+    return {"Data" : user_major_code}
