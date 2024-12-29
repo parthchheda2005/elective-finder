@@ -67,12 +67,15 @@ export default function CoursesPage() {
       setIsLoading(true);
       setCourses([]);
       try {
-        const res1 = await fetch("http://0.0.0.0:8000/get-user-major-code", {
-          signal: controller.signal,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res1 = await fetch(
+          "https://elective-finder.onrender.com/get-user-major-code",
+          {
+            signal: controller.signal,
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const data1 = await res1.json();
         const major_code = data1.Data;
 

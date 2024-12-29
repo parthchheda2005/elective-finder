@@ -42,7 +42,7 @@ export default function LoginPage() {
     try {
       // send request to backend for the token
       const response = await fetch(
-        `http://127.0.0.1:8000/login?username=${username}&password=${password}`,
+        `https://elective-finder.onrender.com/login?username=${username}&password=${password}`,
         {
           method: "POST",
           headers: {

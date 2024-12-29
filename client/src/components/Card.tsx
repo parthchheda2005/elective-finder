@@ -5,7 +5,6 @@ import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import Button from "@mui/material/Button";
 import { Alert } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 
 interface CardProps {
   el: Course;
@@ -73,15 +72,15 @@ export default function Card({ el }: CardProps) {
       try {
         const [courseResponse, ratingResponse] = await Promise.all([
           fetch(
-            `http://127.0.0.1:8000/courses/${el.subject}/${el.course}${
-              el.detail && el.detail
-            }`,
+            `https://elective-finder.onrender.com/courses/${el.subject}/${
+              el.course
+            }${el.detail && el.detail}`,
             { signal }
           ),
           fetch(
-            `http://127.0.0.1:8000/ratings/${el.subject}/${el.course}${
-              el.detail || ""
-            }`,
+            `https://elective-finder.onrender.com/ratings/${el.subject}/${
+              el.course
+            }${el.detail || ""}`,
             {
               method: "GET",
               headers: {
@@ -134,20 +133,23 @@ export default function Card({ el }: CardProps) {
 
   const addRating = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/create-rating", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          course: `${el.course}${el.detail}`,
-          subject: el.subject,
-          course_title: el.course_title,
-          grade: gradeValue,
-          rating: ratingValue,
-        }),
-      });
+      const response = await fetch(
+        "https://elective-finder.onrender.com/create-rating",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            course: `${el.course}${el.detail}`,
+            subject: el.subject,
+            course_title: el.course_title,
+            grade: gradeValue,
+            rating: ratingValue,
+          }),
+        }
+      );
 
       const data = await response.json();
       setAlert("Rating added successfully!");
@@ -160,9 +162,9 @@ export default function Card({ el }: CardProps) {
   const updateRating = async () => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/update-rating/${el.subject}/${el.course}${
-          el.detail || ""
-        }`,
+        `https://elective-finder.onrender.com/update-rating/${el.subject}/${
+          el.course
+        }${el.detail || ""}`,
         {
           method: "PUT",
           headers: {
@@ -191,9 +193,9 @@ export default function Card({ el }: CardProps) {
     e.stopPropagation();
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/remove-rating/${el.subject}/${el.course}${
-          el.detail && el.detail
-        }`,
+        `https://elective-finder.onrender.com/remove-rating/${el.subject}/${
+          el.course
+        }${el.detail && el.detail}`,
         {
           method: "DELETE",
           headers: {

@@ -64,19 +64,22 @@ export default function RegisterPage() {
 
     try {
       // send request to backend for the token
-      const response = await fetch(`http://127.0.0.1:8000/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          major: subject,
-          major_code: subjectCode,
-          email,
-          username,
-          password,
-        }),
-      });
+      const response = await fetch(
+        `https://elective-finder.onrender.com/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            major: subject,
+            major_code: subjectCode,
+            email,
+            username,
+            password,
+          }),
+        }
+      );
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
