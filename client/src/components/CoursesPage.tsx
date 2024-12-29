@@ -81,8 +81,8 @@ export default function CoursesPage() {
 
         const res = await fetch(
           subject === ""
-            ? `http://0.0.0.0:8000/courses/${major_code}`
-            : `http://0.0.0.0:8000/courses/${subject}`,
+            ? `https://elective-finder.onrender.com/courses/${major_code}`
+            : `https://elective-finder.onrender.com/courses/${subject}`,
           { signal: controller.signal }
         );
         if (subject === "") setSubject(major_code);
