@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, TextField, Typography, Alert } from "@mui/material";
+import { Button, TextField, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {

@@ -150,8 +150,6 @@ export default function Card({ el }: CardProps) {
           }),
         }
       );
-
-      const data = await response.json();
       setAlert("Rating added successfully!");
       setHasRating(true);
     } catch (e) {
@@ -181,7 +179,6 @@ export default function Card({ el }: CardProps) {
         }
       );
 
-      const data = await response.json();
       setAlert("Rating updated successfully!");
       setHasRating(true);
     } catch (e) {
@@ -204,7 +201,6 @@ export default function Card({ el }: CardProps) {
         }
       );
 
-      const data = await response.json();
       setAlert("Course rating successfully deleted!");
       setHasRating(false);
     } catch (e) {

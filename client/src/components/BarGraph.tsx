@@ -24,7 +24,9 @@ ChartJS.register(
 
 export default function BarGraph({ data }: BarGraphProps) {
   const chartData = {
-    labels: Object.keys(data).sort((a, b) => (a === "<50%" ? -1 : 1)), // Use the dictionary keys as labels
+    labels: Object.keys(data).sort((a: string, b: string) =>
+      a === "<50%" ? -1 : 1
+    ), // Use the dictionary keys as labels
     datasets: [
       {
         label: "Number of Students", // Name of the dataset
