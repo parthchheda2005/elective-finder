@@ -27,7 +27,7 @@ async def get_recommended_arts_courses(user: dict = Depends(get_current_user)):
                    + "Could you recommend 5 arts courses that the user is likely to enjoy? " +
                    f"I have provided ratings, where 1 means least enjoyment and 5 means most enjoyment, and grades. The user's major is {user_major}. "
                    "You cannot recommend courses that are already done or that are honors courses. " +
-                   "Please provide your answer as a list of courses, each explaining why the user should take it. Also at the very top of your answer indicate what the user's major is")
+                   "Please provide your answer as a list of courses, each explaining why the user should take it.")
     response = model.generate_content(query_to_ai)
     text_response = response.text
     return {"Data" : text_response}

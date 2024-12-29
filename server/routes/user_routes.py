@@ -16,6 +16,7 @@ async def regiter_user(user: User):
     user_data = {
         "username": user.username,
         "email": user.email,
+        "major": user.major,
         "password": hashed_password
     }
     # turn user data into a dict

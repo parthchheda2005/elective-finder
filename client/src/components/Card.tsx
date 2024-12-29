@@ -142,6 +142,7 @@ export default function Card({ el }: CardProps) {
         body: JSON.stringify({
           course: `${el.course}${el.detail}`,
           subject: el.subject,
+          course_title: el.course_title,
           grade: gradeValue,
           rating: ratingValue,
         }),
@@ -170,6 +171,7 @@ export default function Card({ el }: CardProps) {
           body: JSON.stringify({
             course: `${el.course}${el.detail}`,
             subject: el.subject,
+            course_title: el.course_title,
             grade: gradeValue,
             rating: ratingValue,
           }),
