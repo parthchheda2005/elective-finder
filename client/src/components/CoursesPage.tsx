@@ -25,6 +25,7 @@ export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [subject, setSubject] = useState<string>("");
+  const [ratedCourses, setRatedCourses] = useState<Course[]>([]);
 
   const token = localStorage.getItem("token");
 
@@ -50,7 +51,6 @@ export default function CoursesPage() {
             (el: Subject) => el.subject != "AANB" && el.subject != "AQUA"
           )
         );
-        console.log(data);
       } catch (e) {
         console.error("Failed to fetch subjects:", e);
       }
@@ -79,17 +79,24 @@ export default function CoursesPage() {
         const data1 = await res1.json();
         const major_code = data1.Data;
 
-        const res = await fetch(
-          subject === ""
-            ? `https://elective-finder.onrender.com/courses/${major_code}`
-            : `https://elective-finder.onrender.com/courses/${subject}`,
-          { signal: controller.signal }
-        );
-        if (subject === "") setSubject(major_code);
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        const data = await res.json();
-        setCourses(data.Data || []);
-        console.log(data.Data);
+        if (subject === "") {
+          setSubject(major_code);
+          const res = await fetch(
+            `https://elective-finder.onrender.com/courses/${major_code}`,
+            { signal: controller.signal }
+          );
+          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+          const data = await res.json();
+          setCourses(data.Data || []);
+        } else {
+          const res = await fetch(
+            `https://elective-finder.onrender.com/courses/${subject}`,
+            { signal: controller.signal }
+          );
+          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+          const data = await res.json();
+          setCourses(data.Data || []);
+        }
       } catch (e) {
         console.error("Failed to fetch courses:", e);
       } finally {
@@ -99,6 +106,29 @@ export default function CoursesPage() {
 
     getCourses();
     return () => controller.abort();
+  }, [subject]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    const getRatings = async () => {
+      const res = await fetch(`http://127.0.0.1:8000/ratings`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        signal,
+      });
+      const data = await res.json();
+      setRatedCourses(data.Data);
+    };
+
+    getRatings();
+
+    return () => {
+      controller.abort();
+    };
   }, [subject]);
 
   return (
@@ -146,6 +176,12 @@ export default function CoursesPage() {
         courses.map((el) => (
           <Card
             el={{ ...el, subject: subject }}
+            isRated={ratedCourses.some((curr) => {
+              return (
+                curr.subject === subject &&
+                curr.course === `${el.course}${el.detail}`
+              );
+            })}
             key={el.id || `${el.course}${el.detail}`}
           />
         ))

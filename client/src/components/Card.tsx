@@ -8,6 +8,7 @@ import { Alert } from "@mui/material";
 
 interface CardProps {
   el: Course;
+  isRated: boolean;
 }
 
 interface CourseData {
@@ -20,14 +21,14 @@ interface CourseData {
   grades: { [key: string]: number };
 }
 
-export default function Card({ el }: CardProps) {
+export default function Card({ el, isRated }: CardProps) {
   const [clicked, setClicked] = useState<boolean>(false);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [gradeValue, setGradeValue] = useState<number>(70);
   const [ratingValue, setRatingValue] = useState<number>(3);
-  const [hasRating, setHasRating] = useState<boolean>(false);
+  const [hasRating, setHasRating] = useState<boolean>(isRated);
   const [alert, setAlert] = useState("");
 
   const token = localStorage.getItem("token");
@@ -133,23 +134,20 @@ export default function Card({ el }: CardProps) {
 
   const addRating = async () => {
     try {
-      await fetch(
-        "https://elective-finder.onrender.com/create-rating",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            course: `${el.course}${el.detail}`,
-            subject: el.subject,
-            course_title: el.course_title,
-            grade: gradeValue,
-            rating: ratingValue,
-          }),
-        }
-      );
+      await fetch("https://elective-finder.onrender.com/create-rating", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          course: `${el.course}${el.detail}`,
+          subject: el.subject,
+          course_title: el.course_title,
+          grade: gradeValue,
+          rating: ratingValue,
+        }),
+      });
       setAlert("Rating added successfully!");
       setHasRating(true);
     } catch (e) {

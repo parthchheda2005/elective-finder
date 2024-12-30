@@ -3,6 +3,7 @@ def individual_serial(rating) -> dict: # turn json to python dict
     return {
         "id": str(rating["_id"]),
         "course": rating["course"],
+        "course_title": rating["course_title"],
         "subject": rating["subject"],
         "grade": rating["grade"],
         "rating": rating["rating"],
