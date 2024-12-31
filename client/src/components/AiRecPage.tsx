@@ -73,6 +73,11 @@ export default function AiRecPage() {
         throw new Error("No authentication token found");
       }
 
+      if (!apiRoute || apiRoute === "") {
+        setError("Please select a something from the dropdown menu");
+        return;
+      }
+
       const response = await fetch(
         `https://elective-finder.onrender.com/${apiRoute}`,
         {
