@@ -9,13 +9,50 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CourseRecommendationsDisplay from "./CourseRecommendationsDisplay";
+
+// Define the structure of parsed recommendations
+interface Recommendation {
+  number: string;
+  course: string;
+  description: string;
+}
+
+// Parse recommendations from raw text
+const parseRecommendations = (text: string): Recommendation[] => {
+  // Split the text by numbers at the start of lines
+  const parts = text.split(/(?=\d+\.\s+)/);
+
+  return parts
+    .filter((part) => part.trim()) // Remove empty parts
+    .map((part) => {
+      // Extract the number
+      const numberMatch = part.match(/^(\d+)\./);
+      const number = numberMatch ? numberMatch[1] : "";
+
+      // Remove the number from the remaining text
+      const remaining = part.replace(/^\d+\.\s*/, "");
+
+      // Split into course and description
+      const colonIndex = remaining.indexOf(":");
+      const course =
+        colonIndex !== -1 ? remaining.substring(0, colonIndex).trim() : "";
+      const description =
+        colonIndex !== -1 ? remaining.substring(colonIndex + 1).trim() : "";
+
+      return {
+        number,
+        course,
+        description,
+      };
+    })
+    .filter((rec) => rec.number && rec.course && rec.description); // Only keep complete recommendations
+};
 
 export default function AiRecPage() {
-  const [apiRoute, setApiRoute] = useState<string>(""); // Changed to string type
-  const [isLoading, setIsLoading] = useState(false);
-  const [apiResponse, setApiResponse] = useState<string>(""); // Added type
-  const [error, setError] = useState<string>(""); // Added error state
+  const [apiRoute, setApiRoute] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [apiResponse, setApiResponse] = useState<Recommendation[]>([]);
+  const [error, setError] = useState<string>("");
 
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -28,7 +65,7 @@ export default function AiRecPage() {
     }
 
     setIsLoading(true);
-    setApiResponse("");
+    setApiResponse([]);
     setError("");
 
     try {
@@ -51,13 +88,14 @@ export default function AiRecPage() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json(); // Properly await json parsing
+      const data = await response.json();
 
-      if (!data.Data) {
+      if (!data.Data || typeof data.Data !== "string") {
         throw new Error("Invalid response format");
       }
 
-      setApiResponse(data.Data);
+      const dataArr = parseRecommendations(data.Data);
+      setApiResponse(dataArr);
     } catch (e) {
       const errorMessage =
         e instanceof Error ? e.message : "Something went wrong";
@@ -84,7 +122,7 @@ export default function AiRecPage() {
           <Select
             value={apiRoute}
             label="Pick a recommendation to get"
-            onChange={(e) => setApiRoute(e.target.value)}
+            onChange={(e) => setApiRoute(e.target.value as string)}
             sx={{
               color: "white",
               "& .MuiOutlinedInput-notchedOutline": {
@@ -98,40 +136,22 @@ export default function AiRecPage() {
               },
             }}
           >
-            <MenuItem
-              key={"recommended-arts-courses-100-200"}
-              value={"recommended-arts-courses-100-200"}
-            >
+            <MenuItem value={"recommended-arts-courses-100-200"}>
               Recommend Lower Level Arts Courses (100/200 Level)
             </MenuItem>
-            <MenuItem
-              key={"recommended-arts-courses-300"}
-              value={"recommended-arts-courses-300"}
-            >
+            <MenuItem value={"recommended-arts-courses-300"}>
               Recommend Upper Level Arts Courses (300/400 Level)
             </MenuItem>
-            <MenuItem
-              key={"recommended-science-courses-100-200"}
-              value={"recommended-science-courses-100-200"}
-            >
+            <MenuItem value={"recommended-science-courses-100-200"}>
               Recommend Lower Level Science Courses (100/200 Level)
             </MenuItem>
-            <MenuItem
-              key={"recommended-science-courses-300"}
-              value={"recommended-science-courses-300"}
-            >
+            <MenuItem value={"recommended-science-courses-300"}>
               Recommend Upper Level Science Courses (300/400 Level)
             </MenuItem>
-            <MenuItem
-              key={"recommend-upper-level-courses-outside-major"}
-              value={"recommend-upper-level-courses-outside-major"}
-            >
+            <MenuItem value={"recommend-upper-level-courses-outside-major"}>
               Recommend Upper Level Courses Outside Major (300/400 Level)
             </MenuItem>
-            <MenuItem
-              key={"recommend-upper-level-courses-in-major"}
-              value={"recommend-upper-level-courses-in-major"}
-            >
+            <MenuItem value={"recommend-upper-level-courses-in-major"}>
               Recommend Upper Level Courses In Major (300/400 Level)
             </MenuItem>
           </Select>
@@ -157,13 +177,14 @@ export default function AiRecPage() {
           {error}
         </Alert>
       )}
-      {apiResponse && (
-        <div
-          className={`w-full max-w-[720px] text-neutral-100 bg-neutral-700 mx-10 my-3 shadow-lg rounded-lg px-3 py-3 flex items-center justify-between mt-4 flex-col font-semibold`}
-        >
-          <CourseRecommendationsDisplay recommendationsText={apiResponse} />
-        </div>
-      )}
+      {apiResponse.length > 0 &&
+        apiResponse.map((el) => (
+          <div
+            className={`w-full max-w-[720px] text-neutral-100 bg-neutral-700 mx-10 my-3 shadow-lg rounded-lg px-3 py-3 flex items-center justify-between mt-4 flex-col font-semibold`}
+          >
+            {el.course} - {el.description}
+          </div>
+        ))}
     </div>
   );
 }
