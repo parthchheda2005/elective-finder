@@ -113,7 +113,7 @@ export default function CoursesPage() {
     const signal = controller.signal;
 
     const getRatings = async () => {
-      const res = await fetch(`http://127.0.0.1:8000/ratings`, {
+      const res = await fetch(`https://elective-finder.onrender.com/ratings`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
