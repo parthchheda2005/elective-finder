@@ -173,7 +173,7 @@ export default function AiRecPage() {
         </Button>
       </div>
       {isLoading && (
-        <Alert severity="success">
+        <Alert severity="success" className="mt-4 max-w-[720px] mx-10">
           Query successfully submitted! Waiting on Gemini...
         </Alert>
       )}
