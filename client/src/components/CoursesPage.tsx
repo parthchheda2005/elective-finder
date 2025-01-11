@@ -132,7 +132,7 @@ export default function CoursesPage() {
   }, [subject]);
 
   return (
-    <div className="flex justify-center items-center flex-col">
+    <div className="flex justify-center items-center flex-col mb-12">
       <button
         onClick={() => navigate("/ai")}
         className="p-2 bg-indigo-200 text-[#242424] rounded transition-all duration-300 hover:bg-blue-300 hover:scale-105 w-fit mt-2 mb-4"
